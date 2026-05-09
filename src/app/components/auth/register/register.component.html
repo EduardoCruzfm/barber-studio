@@ -1,0 +1,75 @@
+<div class="auth-page">
+
+  <div class="bg-blur"></div>
+
+  <div class="auth-wrapper">
+
+    <div class="auth-header">
+      <h1>Crear cuenta</h1>
+      <p>Registrar nuevo empleado o administrador</p>
+    </div>
+
+    <div class="auth-card">
+
+      <form [formGroup]="form" (ngSubmit)="register()">
+
+        <div class="input-group">
+          <input
+            type="text"
+            placeholder="Nombre"
+            formControlName="name"
+            name="name"
+          />
+        </div>
+
+        <div class="input-group">
+          <input
+            type="text"
+            placeholder="Apellido"
+            formControlName="lastName"
+            name="lastName"
+          />
+        </div>
+
+        <div class="input-group">
+          <input
+            type="email"
+            placeholder="Email"
+            formControlName="email"
+            name="email"
+          />
+        </div>
+
+        <div class="input-group">
+          <input
+            type="password"
+            placeholder="Contraseña"
+            formControlName="password"
+            name="password"
+          />
+        </div>
+
+        <div class="input-group">
+          <select formControlName="role" name="role">
+            <option value="empleado">Empleado</option>
+            <option value="admin">Administrador</option>
+          </select>
+        </div>
+
+        <button type="submit" class="auth-btn">
+          Registrarse
+        </button>
+
+      </form>
+
+      <!-- Link -->
+      <p class="auth-link">
+        ¿Ya tenés cuenta?
+        <a routerLink="/login">Iniciar sesión</a>
+      </p>
+
+    </div>
+
+  </div>
+
+</div>

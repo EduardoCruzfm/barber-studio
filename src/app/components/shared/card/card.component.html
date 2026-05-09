@@ -1,0 +1,13 @@
+<div class="card" [class.no-padding]="noPadding">
+  @if (cardTitle) {
+    <div class="card-header">
+      <h3 class="card-title">{{ cardTitle }}</h3>
+      @if (subtitle) {
+        <span class="card-subtitle">{{ subtitle }}</span>
+      }
+    </div>
+  }
+  <div class="card-body">
+    <ng-content></ng-content>
+  </div>
+</div>

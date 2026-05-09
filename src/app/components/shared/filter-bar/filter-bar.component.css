@@ -1,0 +1,154 @@
+.filter-bar {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-primary);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  animation: slideUp 0.3s ease both;
+}
+
+.filter-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-md) var(--space-lg);
+}
+
+.filter-toggle {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  background: none;
+  border: none;
+  color: var(--text-primary);
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  padding: 0;
+  font-family: inherit;
+  position: relative;
+}
+
+.filter-toggle svg {
+  width: 18px;
+  height: 18px;
+  color: var(--accent);
+}
+
+.filter-badge {
+  width: 8px;
+  height: 8px;
+  background: var(--accent);
+  border-radius: 50%;
+  position: absolute;
+  top: -2px;
+  right: -12px;
+}
+
+.clear-btn {
+  background: none;
+  border: none;
+  color: var(--accent);
+  font-size: 0.8rem;
+  cursor: pointer;
+  font-family: inherit;
+  padding: var(--space-xs) var(--space-sm);
+  border-radius: var(--radius-sm);
+  transition: background var(--transition-fast);
+}
+
+.clear-btn:hover {
+  background: var(--accent-subtle);
+}
+
+.filter-content {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-md);
+  padding: 0 var(--space-lg) var(--space-lg);
+}
+
+.filter-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  min-width: 140px;
+}
+
+.filter-chips-group {
+  flex-basis: 100%;
+}
+
+.filter-label {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 600;
+}
+
+.filter-input {
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-primary);
+  border-radius: var(--radius-sm);
+  color: var(--text-primary);
+  padding: var(--space-sm) var(--space-md);
+  font-size: 0.85rem;
+  font-family: inherit;
+  outline: none;
+  transition: border-color var(--transition-fast);
+  color-scheme: dark;
+}
+
+.filter-input:focus {
+  border-color: var(--accent);
+}
+
+.filter-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-xs);
+}
+
+.chip {
+  padding: 6px 14px;
+  border-radius: 20px;
+  border: 1px solid var(--border-primary);
+  background: var(--bg-tertiary);
+  color: var(--text-secondary);
+  font-size: 0.8rem;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  white-space: nowrap;
+}
+
+.chip:hover {
+  border-color: var(--accent);
+  color: var(--text-primary);
+}
+
+.chip.active {
+  background: var(--accent-subtle);
+  border-color: var(--accent);
+  color: var(--accent);
+  font-weight: 500;
+}
+
+/* ─── Mobile: collapsible ─── */
+@media (max-width: 767px) {
+  .filter-content {
+    display: none;
+    flex-direction: column;
+  }
+  .filter-bar.expanded .filter-content {
+    display: flex;
+  }
+  .filter-group {
+    min-width: 100%;
+  }
+}
+
+@media (min-width: 768px) {
+  .filter-toggle svg { display: none; }
+  .filter-content { display: flex; }
+}

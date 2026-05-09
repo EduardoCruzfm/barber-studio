@@ -1,0 +1,159 @@
+.dashboard {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xl);
+  animation: fadeIn 0.4s ease;
+}
+
+/* ─── Page Header ─── */
+.page-header h1 {
+  font-size: 1.75rem;
+  font-weight: 700;
+}
+
+.page-subtitle {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  margin-top: 4px;
+}
+
+/* ─── Stats Grid ─── */
+.stats-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-md);
+}
+
+/* ─── Section Titles ─── */
+.section-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: var(--space-md);
+  color: var(--text-primary);
+}
+
+/* ─── Payment Summary ─── */
+.payment-cards {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-sm);
+}
+
+.payment-card {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  padding: var(--space-md) var(--space-lg);
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-primary);
+  border-radius: var(--radius-md);
+  transition: all var(--transition-fast);
+  animation: slideUp 0.3s ease both;
+}
+
+.payment-card:hover {
+  border-color: var(--accent-subtle);
+  transform: translateX(4px);
+}
+
+.payment-icon {
+  font-size: 1.5rem;
+}
+
+.payment-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.payment-method {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.payment-amount {
+  font-family: var(--font-heading);
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--success);
+}
+
+.payment-count {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  background: var(--bg-tertiary);
+  padding: 4px 10px;
+  border-radius: 12px;
+}
+
+.desktop-only {
+  margin-top: 16px;
+}
+
+/* ─── Service Cards (Mobile) ─── */
+.service-cards {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.service-card-content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.service-card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.service-type-badge {
+  font-size: 0.78rem;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 12px;
+  background: var(--accent-subtle);
+  color: var(--accent);
+}
+
+.service-price {
+  font-family: var(--font-heading);
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--success);
+}
+
+.service-card-details {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-sm);
+}
+
+.detail-item {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+}
+
+.empty-text {
+  text-align: center;
+  color: var(--text-muted);
+  padding: var(--space-xl);
+  font-size: 0.9rem;
+}
+
+/* ─── Responsive ─── */
+@media (min-width: 640px) {
+  .stats-grid { grid-template-columns: repeat(2, 1fr); }
+  .payment-cards { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (min-width: 1024px) {
+  .stats-grid { grid-template-columns: repeat(4, 1fr); }
+  .payment-cards { grid-template-columns: repeat(4, 1fr); }
+}

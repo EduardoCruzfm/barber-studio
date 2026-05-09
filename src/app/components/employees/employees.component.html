@@ -1,0 +1,79 @@
+<!-- <div class="employee-list">
+  @for (emp of employees; track emp.id) {
+    <div class="employee-row">
+      <div class="info">
+        <strong>{{ emp.name }}</strong>
+        <span class="role">{{ emp.role }}</span>
+      </div>
+
+      <div class="actions">
+        <button>Editar</button>
+        <button class="danger">Eliminar</button>
+      </div>
+    </div>
+  }
+</div> -->
+
+<div class="employees">
+
+  <!-- Header -->
+  <div class="page-header">
+    <div>
+      <h1>Empleados</h1>
+      <p class="subtitle">Gestión del personal de la barbería</p>
+    </div>
+
+    <button class="add-btn" (click)="toggleForm()">
+      + Nuevo empleado
+    </button>
+  </div>
+
+  <!-- Form (simple por ahora) -->
+  @if (showForm) {
+    <app-card>
+      <form [formGroup]="form" (ngSubmit)="addEmployee($event)">
+        <div class="form-grid">
+          <input type="text" placeholder="Nombre" formControlName="name" name="name" required />
+          <input type="text" placeholder="Apellido" formControlName="lastName" name="lastName" required />
+          <input type="email" placeholder="Email" formControlName="email" name="email" required />
+          <input type="password" placeholder="Contraseña" formControlName="password" name="password" required />
+          <select formControlName="role" name="role">
+            <option value="empleado">Empleado</option>
+            <option value="admin">Admin</option>
+          </select>
+        </div>
+
+        <div class="form-actions">
+          <button type="submit">Guardar</button>
+          <button type="button" (click)="toggleForm()">Cancelar</button>
+        </div>
+      </form>
+    </app-card>
+  }
+
+  <!-- Lista -->
+  <div class="employee-list">
+    @for (emp of employees; track emp.id) {
+      <app-card>
+        <div class="employee-row">
+
+          <div class="info">
+            <span class="avatar">{{ emp.name[0] }}</span>
+
+            <div>
+              <strong>{{ emp.name }}</strong>
+              <span class="role">{{ emp.role }}</span>
+            </div>
+          </div>
+
+          <div class="actions">
+            <button class="edit">Editar</button>
+            <button class="delete">Eliminar</button>
+          </div>
+
+        </div>
+      </app-card>
+    }
+  </div>
+
+</div>

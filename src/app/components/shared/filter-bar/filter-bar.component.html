@@ -1,0 +1,58 @@
+<div class="filter-bar" [class.expanded]="isExpanded">
+  <div class="filter-header">
+    <button class="filter-toggle" (click)="toggleExpand()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/>
+      </svg>
+      <span>Filtros</span>
+      @if (hasActiveFilters) {
+        <span class="filter-badge"></span>
+      }
+    </button>
+    @if (hasActiveFilters) {
+      <button class="clear-btn" (click)="clearFilters()">Limpiar</button>
+    }
+  </div>
+
+  <div class="filter-content">
+    <div class="filter-group">
+      <label class="filter-label">Desde</label>
+      <input type="date" class="filter-input" [(ngModel)]="dateFrom" (change)="onFilterChange()">
+    </div>
+
+    <div class="filter-group">
+      <label class="filter-label">Hasta</label>
+      <input type="date" class="filter-input" [(ngModel)]="dateTo" (change)="onFilterChange()">
+    </div>
+
+    <div class="filter-group">
+      <label class="filter-label">Empleado</label>
+      <select class="filter-input" [(ngModel)]="selectedEmployee" (change)="onFilterChange()">
+        <option value="">Todos</option>
+        @for (emp of employees; track emp.id) {
+          <option [value]="emp.id">{{ emp.name }}</option>
+        }
+      </select>
+    </div>
+
+    <div class="filter-group filter-chips-group">
+      <label class="filter-label">Método de pago</label>
+      <div class="filter-chips">
+        <button
+          class="chip"
+          [class.active]="selectedPayment === ''"
+          (click)="selectedPayment = ''; onFilterChange()">
+          Todos
+        </button>
+        @for (method of paymentMethods; track method) {
+          <button
+            class="chip"
+            [class.active]="selectedPayment === method"
+            (click)="selectedPayment = method; onFilterChange()">
+            {{ method }}
+          </button>
+        }
+      </div>
+    </div>
+  </div>
+</div>

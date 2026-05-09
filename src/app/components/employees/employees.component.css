@@ -1,0 +1,106 @@
+.employees {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Header */
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.subtitle {
+  color: #888;
+  font-size: 14px;
+}
+
+/* Botón */
+.add-btn {
+  background: #6c5ce7;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 10px;
+  color: white;
+  cursor: pointer;
+}
+
+/* Lista */
+.employee-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.employee-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Info */
+.info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.avatar {
+  width: 40px;
+  height: 40px;
+  background: #6c5ce7;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: bold;
+}
+
+.role {
+  display: block;
+  font-size: 12px;
+  color: #aaa;
+}
+
+/* Acciones */
+.actions {
+  display: flex;
+  gap: 10px;
+}
+
+.edit {
+  background: #2d3436;
+  color: white;
+  border: none;
+  padding: 6px 10px;
+  border-radius: 8px;
+}
+
+.delete {
+  background: #d63031;
+  color: white;
+  border: none;
+  padding: 6px 10px;
+  border-radius: 8px;
+}
+
+/* Form */
+.form-grid {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+input, select {
+  flex: 1;
+  padding: 10px;
+  border-radius: 8px;
+  border: none;
+}
+
+.form-actions {
+  display: flex;
+  gap: 10px;
+}

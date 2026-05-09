@@ -1,0 +1,51 @@
+<div class="login-page">
+
+  <!-- Fondo decorativo -->
+  <div class="bg-blur"></div>
+
+  <div class="login-wrapper">
+
+    <!-- Branding -->
+    <div class="login-header">
+      <h1>Barber Studio</h1>
+      <p>Panel de gestión</p>
+    </div>
+
+    <!-- Card -->
+    <div class="login-card">
+
+      <form [formGroup]="form" (ngSubmit)="login()">
+
+        <div class="input-group">
+          <input
+            type="email"
+            placeholder="Email"
+            name="email"
+            formControlName="email"
+          />
+        </div>
+
+        <div class="input-group">
+          <input
+            type="password"
+            placeholder="Contraseña"
+            name="password"
+            formControlName="password"
+          />
+        </div>
+
+        <button type="submit" class="login-btn">
+          Ingresar
+        </button>
+
+      </form>
+       <p class="auth-link">
+        ¿No tenés cuenta?
+        <a routerLink="/register">Registrarse</a>
+      </p>
+    </div>
+
+  </div>
+  
+ 
+</div>

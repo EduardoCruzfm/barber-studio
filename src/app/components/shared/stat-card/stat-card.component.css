@@ -1,0 +1,103 @@
+.stat-card {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-primary);
+  border-radius: var(--radius-lg);
+  padding: var(--space-lg);
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-md);
+  transition: all var(--transition-normal);
+  animation: slideUp 0.4s ease both;
+  position: relative;
+  overflow: hidden;
+}
+
+.stat-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  opacity: 0;
+  transition: opacity var(--transition-normal);
+}
+
+.stat-card:hover {
+  border-color: transparent;
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+}
+
+.stat-card:hover::before {
+  opacity: 1;
+}
+
+/* ─── Variants ─── */
+.stat-card[data-variant="accent"] .stat-icon { background: var(--accent-subtle); color: var(--accent); }
+.stat-card[data-variant="accent"]::before { background: linear-gradient(90deg, var(--accent), transparent); }
+.stat-card[data-variant="accent"] .stat-value { color: var(--accent); }
+
+.stat-card[data-variant="success"] .stat-icon { background: var(--success-subtle); color: var(--success); }
+.stat-card[data-variant="success"]::before { background: linear-gradient(90deg, var(--success), transparent); }
+.stat-card[data-variant="success"] .stat-value { color: var(--success); }
+
+.stat-card[data-variant="warning"] .stat-icon { background: var(--warning-subtle); color: var(--warning); }
+.stat-card[data-variant="warning"]::before { background: linear-gradient(90deg, var(--warning), transparent); }
+.stat-card[data-variant="warning"] .stat-value { color: var(--warning); }
+
+.stat-card[data-variant="pink"] .stat-icon { background: var(--pink-subtle); color: var(--pink); }
+.stat-card[data-variant="pink"]::before { background: linear-gradient(90deg, var(--pink), transparent); }
+.stat-card[data-variant="pink"] .stat-value { color: var(--pink); }
+
+/* ─── Icon ─── */
+.stat-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.stat-icon svg {
+  width: 24px;
+  height: 24px;
+}
+
+/* ─── Content ─── */
+.stat-content {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.stat-title {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.stat-value {
+  font-family: var(--font-heading);
+  font-size: 1.75rem;
+  font-weight: 700;
+  line-height: 1.2;
+  margin-top: 2px;
+}
+
+.stat-subtitle {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  margin-top: 4px;
+}
+
+@media (max-width: 767px) {
+  .stat-card { padding: var(--space-md); }
+  .stat-icon { width: 40px; height: 40px; }
+  .stat-icon svg { width: 20px; height: 20px; }
+  .stat-value { font-size: 1.4rem; }
+}

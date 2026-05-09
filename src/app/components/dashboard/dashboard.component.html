@@ -1,0 +1,107 @@
+<div class="dashboard">
+  <header class="page-header">
+    <h1>Dashboard</h1>
+    <p class="page-subtitle">Resumen del día — {{ todayRecords.length }} servicios registrados</p>
+  </header>
+
+  <!-- Stat Cards Grid -->
+  <section class="stats-grid">
+    <app-stat-card
+      title="Servicios Hoy"
+      [value]="stats.totalServices.toString()"
+      subtitle="servicios realizados"
+      icon="services"
+      variant="accent">
+    </app-stat-card>
+
+    <app-stat-card
+      title="Total Recaudado"
+      [value]="formatCurrency(stats.totalRevenue)"
+      subtitle="ingresos del día"
+      icon="money"
+      variant="success">
+    </app-stat-card>
+
+    <app-stat-card
+      title="Promedio por Servicio"
+      [value]="formatCurrency(stats.averagePerService)"
+      subtitle="precio promedio"
+      icon="average"
+      variant="warning">
+    </app-stat-card>
+
+    <app-stat-card
+      title="Método Más Usado"
+      [value]="stats.mostUsedPayment"
+      subtitle="más frecuente hoy"
+      icon="payment"
+      variant="pink">
+    </app-stat-card>
+  </section>
+
+  <!-- Payment Summary -->
+  <section class="payment-summary">
+    <h2 class="section-title">Resumen por Método de Pago</h2>
+    <div class="payment-cards">
+      @for (item of stats.revenueByPayment; track item.method) {
+        <div class="payment-card">
+          <span class="payment-icon">{{ getPaymentIcon(item.method) }}</span>
+          <div class="payment-info">
+            <span class="payment-method">{{ item.method }}</span>
+            <span class="payment-amount">{{ formatCurrency(item.total) }}</span>
+          </div>
+          <span class="payment-count">{{ item.count }} serv.</span>
+        </div>
+      }
+      @if (stats.revenueByPayment.length === 0) {
+        <p class="empty-text">No hay registros hoy</p>
+      }
+    </div>
+  </section>
+
+  <!-- Today's Services -->
+  <section class="today-services">
+    <h2 class="section-title">Servicios de Hoy</h2>
+    
+    <!-- Mobile: Cards -->
+    <div class="service-cards mobile-only">
+      @for (record of todayRecords; track record.id) {
+        <app-card>
+          <div class="service-card-content">
+            <div class="service-card-top">
+              <span class="service-type-badge">{{ record.serviceType }}</span>
+              <span class="service-price">{{ formatCurrency(record.price) }}</span>
+            </div>
+            <div class="service-card-details">
+              <span class="detail-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                {{ record.employeeName }}
+              </span>
+              @if (record.clientName) {
+                <span class="detail-item">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M16 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="8.5" cy="7" r="4"/></svg>
+                  {{ record.clientName }}
+                </span>
+              }
+              <span class="detail-item">{{ record.paymentMethod }}</span>
+            </div>
+          </div>
+        </app-card>
+      }
+      @if (todayRecords.length === 0) {
+        <p class="empty-text">No hay servicios registrados hoy</p>
+      }
+    </div>
+    
+    <!-- Desktop: Table -->
+    <div class="desktop-only">
+      <app-card [noPadding]="true">
+        <app-table
+          [columns]="tableColumns"
+          [data]="todayRecords"
+          emptyMessage="No hay servicios registrados hoy">
+        </app-table>
+      </app-card>
+    </div>
+  </section>
+</div>

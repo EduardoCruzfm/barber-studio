@@ -1,0 +1,17 @@
+<div class="layout">
+  <app-sidebar [isOpen]="sidebarOpen" (close)="closeSidebar()"></app-sidebar>
+
+  @if (sidebarOpen) {
+    <div class="sidebar-overlay" (click)="closeSidebar()"></div>
+  }
+
+  <div class="main-area">
+    <app-navbar
+      [currentEmployee]="usuarioActual"
+      (toggleSidebar)="toggleSidebar()">
+    </app-navbar>
+    <main class="content">
+      <router-outlet></router-outlet>
+    </main>
+  </div>
+</div>
