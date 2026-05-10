@@ -1,0 +1,111 @@
+.services {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.subtitle {
+  color: #9ca3af;
+  margin-top: .3rem;
+}
+
+.add-btn {
+  background: #111827;
+  color: white;
+  border: none;
+  border-radius: 12px;
+  padding: .9rem 1.2rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+}
+
+.form-grid input {
+  padding: 1rem;
+  border-radius: 12px;
+  border: 1px solid #e5e7eb;
+  background: #0f172a;
+  color: white;
+}
+
+.form-actions {
+  margin-top: 1rem;
+  display: flex;
+  gap: 1rem;
+}
+
+.form-actions button {
+  border: none;
+  border-radius: 10px;
+  padding: .8rem 1rem;
+  cursor: pointer;
+}
+
+.services-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1rem;
+}
+
+.service-card {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.top {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.badge {
+  background: #14532d;
+  color: #86efac;
+  padding: .4rem .7rem;
+  border-radius: 999px;
+  font-size: .8rem;
+}
+
+.info-row {
+  display: flex;
+  justify-content: space-between;
+  color: #d1d5db;
+}
+
+.actions {
+  display: flex;
+  gap: .8rem;
+  margin-top: .5rem;
+}
+
+.edit,
+.delete {
+  flex: 1;
+  border: none;
+  border-radius: 10px;
+  padding: .8rem;
+  cursor: pointer;
+}
+
+.edit {
+  background: #1d4ed8;
+  color: white;
+}
+
+.delete {
+  background: #7f1d1d;
+  color: white;
+}

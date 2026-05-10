@@ -21,5 +21,5 @@ export const appConfig: ApplicationConfig = {
   { provide: FIREBASE_OPTIONS, useValue: environment.firebaseConfig },
   provideAnimationsAsync(),
   provideAnimations()
-  ]
+]
 };

@@ -1,0 +1,91 @@
+<div class="records">
+
+  <div class="page-header">
+
+    <div>
+      <h1>Atenciones</h1>
+      <p class="subtitle">Registra los servicios realizados</p>
+    </div>
+
+    <button class="add-btn" (click)="toggleForm()">
+      + Nueva atención
+    </button>
+
+  </div>
+
+  @if (showForm) {
+
+    <app-card>
+
+      <div class="form-grid">
+
+        <input
+          type="text"
+          placeholder="Cliente"
+          [(ngModel)]="newRecord.client"
+        />
+
+        <input
+          type="text"
+          placeholder="Servicio"
+          [(ngModel)]="newRecord.service"
+        />
+
+        <input
+          type="text"
+          placeholder="Barbero"
+          [(ngModel)]="newRecord.employee"
+        />
+
+        <select [(ngModel)]="newRecord.payment">
+          <option>Efectivo</option>
+          <option>Transferencia</option>
+          <option>Débito</option>
+        </select>
+
+        <input
+          type="number"
+          placeholder="Monto"
+          [(ngModel)]="newRecord.amount"
+        />
+
+      </div>
+
+      <div class="form-actions">
+        <button (click)="addRecord()">Guardar</button>
+        <button (click)="toggleForm()">Cancelar</button>
+      </div>
+
+    </app-card>
+  }
+
+  <div class="records-list">
+
+    @for (record of records; track record.id) {
+
+      <app-card>
+
+        <div class="record-row">
+
+          <div class="left">
+            <span class="avatar">{{ record.client[0] }}</span>
+
+            <div>
+              <strong>{{ record.client }}</strong>
+              <p>{{ record.service }}</p>
+            </div>
+          </div>
+
+          <div class="right">
+            <strong>${{ record.amount }}</strong>
+            <span>{{ record.payment }}</span>
+          </div>
+
+        </div>
+
+      </app-card>
+    }
+
+  </div>
+
+</div>

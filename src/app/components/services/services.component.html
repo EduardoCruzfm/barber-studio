@@ -1,0 +1,88 @@
+<div class="services">
+
+  <div class="page-header">
+
+    <div>
+      <h1>Servicios</h1>
+      <p class="subtitle">Gestiona los servicios y precios de la barbería</p>
+    </div>
+
+    <button class="add-btn" (click)="toggleForm()">
+      + Nuevo servicio
+    </button>
+
+  </div>
+
+  @if (showForm) {
+
+    <app-card>
+
+      <div class="form-grid">
+
+        <input
+          type="text"
+          placeholder="Nombre del servicio"
+          [(ngModel)]="newService.name"
+        />
+
+        <input
+          type="number"
+          placeholder="Precio"
+          [(ngModel)]="newService.price"
+        />
+
+        <input
+          type="number"
+          placeholder="Duración (min)"
+          [(ngModel)]="newService.duration"
+        />
+
+      </div>
+
+      <div class="form-actions">
+        <button (click)="addService()">Guardar</button>
+        <button type="button" (click)="toggleForm()">Cancelar</button>
+      </div>
+
+    </app-card>
+  }
+
+  <div class="services-grid">
+
+    @for (service of services; track service.id) {
+
+      <app-card>
+
+        <div class="service-card">
+
+          <div class="top">
+            <span class="badge">{{ service.active ? 'Activo' : 'Inactivo' }}</span>
+          </div>
+
+          <h3>{{ service.name }}</h3>
+
+          <div class="info-row">
+            <span>Precio</span>
+            <strong>${{ service.price }}</strong>
+          </div>
+
+          <div class="info-row">
+            <span>Duración</span>
+            <strong>{{ service.duration }} min</strong>
+          </div>
+
+          <div class="actions">
+            <button class="edit">Editar</button>
+            <button class="delete" (click)="deleteService(service.id)">
+              Eliminar
+            </button>
+          </div>
+
+        </div>
+
+      </app-card>
+    }
+
+  </div>
+
+</div>

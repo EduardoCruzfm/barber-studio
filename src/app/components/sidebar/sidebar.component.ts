@@ -31,6 +31,11 @@ export class SidebarComponent {
       icon: 'scissors'
     },
     {
+      label: 'Atenciones',
+      route: '/records',
+      icon: 'receipt'
+    },
+    {
       label: 'Empleados',
       route: '/employees',
       icon: 'users'
