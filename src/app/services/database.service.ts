@@ -23,50 +23,44 @@ export class DatabaseService {
     }
   }
 
-  async agregarTurno(turno: any, coleccion: string) {
+  async agregarDocumento(data: any, coleccion: string) {
     try {
-      // Generar un nuevo ID único para el turno usando createId()
-      const turnoId = this.firestore.createId();
-  
-      // Asignar el ID generado al turno
-      turno.id = turnoId;
-  
-      // Crear una referencia al documento usando el ID generado
-      const turnoDocRef = this.firestore.collection(coleccion).doc(turnoId);
-  
-      // Guardar el documento en Firestore
-      await turnoDocRef.set({ ...turno });
-  
-      console.log('Turno agregado exitosamente con ID:', turnoId);
+
+      const id = this.firestore.createId();
+
+      data.id = id;
+
+      const docRef = this.firestore
+        .collection(coleccion)
+        .doc(id);
+
+      await docRef.set({
+        ...data
+      });
+
+      console.log(`${coleccion} agregado correctamente con ID:`, id);
+
+      return id;
+
     } catch (error) {
-      console.error('Error al agregar el turno:', error);
+
+      console.error(`Error al agregar en ${coleccion}:`, error);
+
+      throw error;
     }
   }
-
-  async agregarLog(log: any, coleccion: string) {
-    try {
-      const logId = this.firestore.createId();
-      log.id = logId;
-  
-      // Crear una referencia al documento usando el ID generado
-      const logDocRef = this.firestore.collection(coleccion).doc(logId);
-  
-      // Guardar el documento en Firestore
-      await logDocRef.set({ ...log });
-  
-      console.log('Log agregado exitosamente con ID:', logId);
-    } catch (error) {
-      console.error('Error al agregar el log:', error);
-    }
-  }
-  
-  
-
 
   traerUsuario(user: string){
     const collectionUsuarios = this.firestore.collection(user);
     const observable = collectionUsuarios.valueChanges();
     return observable;
+  }
+
+  traerColeccion<T>(coleccion: string) {
+
+    return this.firestore
+      .collection<T>(coleccion)
+      .valueChanges();
   }
 
   modificarUsuario(usuario: any, coleccion: string){

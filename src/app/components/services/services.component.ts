@@ -2,14 +2,8 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { CardComponent } from '../shared/card/card.component';
-
-interface Service {
-  id: string;
-  name: string;
-  price: number;
-  duration: number;
-  active: boolean;
-}
+import { Service } from '../../models/service.model';
+import { DatabaseService } from '../../services/database.service';
 
 @Component({
   selector: 'app-services',
@@ -19,38 +13,34 @@ interface Service {
   styleUrl: './services.component.css'
 })
 export class ServicesComponent {
-showForm = false;
+  showForm = false;
+  services: Service[] = [];
 
-  services: Service[] = [
-    {
-      id: '1',
-      name: 'Corte clásico',
-      price: 8000,
-      duration: 40,
-      active: true
-    },
-    {
-      id: '2',
-      name: 'Corte + Barba',
-      price: 12000,
-      duration: 60,
-      active: true
-    }
-  ];
+  constructor(private db: DatabaseService) {
+    this.getServices();
+  }
 
   newService: Partial<Service> = {
     name: '',
-    price: 0,
-    duration: 0,
+    price: null as any,
+    duration: null as any,
     active: true
   };
+
+  getServices(){
+    this.db.traerColeccion<Service>('services').subscribe((response) => {
+      this.services = response ;
+      console.log('Lista de servicios:', this.services);
+    });
+  }
 
   toggleForm() {
     this.showForm = !this.showForm;
   }
-addService() {
 
-    if (!this.newService.name || !this.newService.price) return;
+  async addService() {
+
+    if (!this.newService.name || !this.newService.price || !this.newService.duration) return;
 
     const service: Service = {
       id: Date.now().toString(),
@@ -60,12 +50,15 @@ addService() {
       active: true
     };
 
-    this.services.unshift(service);
+    await this.db.agregarDocumento(service,'services');
+    console.log('Servicio', service) 
+
+    // this.services.unshift(service);
 
     this.newService = {
       name: '',
-      price: 0,
-      duration: 0,
+      price: null as any,
+      duration: null as any,
       active: true
     };
 

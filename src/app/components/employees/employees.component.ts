@@ -74,11 +74,11 @@ export class EmployeesComponent {
           console.log('Usuario registrado:', user.data);
           await this.db.agregarUsuario(user.data, 'users');
 
-          this.employees.push({
-            id: userId ?? '',
-            name: name + ' ' + lastName,
-            role: role
-          });
+          // this.employees.push({
+          //   id: userId ?? '',
+          //   name: name + ' ' + lastName,
+          //   role: role
+          // });
 
           this.form.reset();
           this.newEmployee = { name: '', role: 'empleado' };
