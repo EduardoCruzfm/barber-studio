@@ -25,17 +25,40 @@
           [(ngModel)]="newRecord.client"
         />
 
-        <input
-          type="text"
-          placeholder="Servicio"
-          [(ngModel)]="newRecord.service"
-        />
+        <select [(ngModel)]="newRecord.serviceName" 
+                 (change)="onServiceChange()">
+          
 
-        <input
-          type="text"
-          placeholder="Barbero"
-          [(ngModel)]="newRecord.employee"
-        />
+          <option value="" disabled selected>
+            Seleccionar servicio
+          </option>
+
+          @for (service of services; track service.id) {
+
+            <option [value]="service.name">
+              {{ service.name }}
+            </option>
+
+          }
+
+        </select>
+
+        <select [(ngModel)]="newRecord.employee">
+          
+
+          <option value="" disabled selected>
+            Seleccionar Barbero
+          </option>
+
+          @for (employee of employees; track employee.id) {
+
+            <option [value]="employee.name">
+              {{ employee.name }}
+            </option>
+
+          }
+
+        </select>
 
         <select [(ngModel)]="newRecord.payment">
           <option>Efectivo</option>
@@ -47,6 +70,7 @@
           type="number"
           placeholder="Monto"
           [(ngModel)]="newRecord.amount"
+          readonly
         />
 
       </div>
@@ -72,7 +96,7 @@
 
             <div>
               <strong>{{ record.client }}</strong>
-              <p>{{ record.service }}</p>
+              <p>{{ record.serviceName }}</p>
             </div>
           </div>
 
