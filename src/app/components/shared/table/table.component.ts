@@ -20,25 +20,51 @@ export class TableComponent {
   @Input() emptyMessage = 'No hay registros para mostrar';
 
   formatValue(value: any, format?: string): string {
+
     if (value == null) return '—';
 
+    const date = this.parseDate(value);
+
     switch (format) {
+
       case 'currency':
         return `$ ${Number(value).toLocaleString('es-AR')}`;
+
       case 'date':
-        return new Date(value).toLocaleDateString('es-AR', {
-          day: '2-digit', month: '2-digit', year: 'numeric'
+        return date.toLocaleDateString('es-AR', {
+          day: '2-digit',
+          month: '2-digit',
+          year: 'numeric'
         });
+
       case 'time':
-        return new Date(value).toLocaleTimeString('es-AR', {
-          hour: '2-digit', minute: '2-digit'
+        return date.toLocaleTimeString('es-AR', {
+          hour: 'numeric',
+          minute: '2-digit',
+          hour12: true
         });
+
       case 'datetime':
-        return new Date(value).toLocaleDateString('es-AR', {
-          day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit'
+        return date.toLocaleString('es-AR', {
+          day: '2-digit',
+          month: '2-digit',
+          hour: 'numeric',
+          minute: '2-digit',
+          hour12: true
         });
+
       default:
         return String(value);
     }
   }
+
+  parseDate(value: any): Date {
+
+  // Firebase Timestamp
+  if (value?.seconds) {
+    return new Date(value.seconds * 1000);
+  }
+
+  return new Date(value);
+}
 }

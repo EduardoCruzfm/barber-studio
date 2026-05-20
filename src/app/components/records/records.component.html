@@ -22,7 +22,7 @@
         <input
           type="text"
           placeholder="Cliente"
-          [(ngModel)]="newRecord.client"
+          [(ngModel)]="newRecord.clientName"
         />
 
         <select [(ngModel)]="newRecord.serviceName" 
@@ -43,7 +43,7 @@
 
         </select>
 
-        <select [(ngModel)]="newRecord.employee">
+        <select [(ngModel)]="newRecord.employeeName">
           
 
           <option value="" disabled selected>
@@ -60,7 +60,7 @@
 
         </select>
 
-        <select [(ngModel)]="newRecord.payment">
+        <select [(ngModel)]="newRecord.paymentMethod">
           <option>Efectivo</option>
           <option>Transferencia</option>
           <option>Débito</option>
@@ -69,7 +69,7 @@
         <input
           type="number"
           placeholder="Monto"
-          [(ngModel)]="newRecord.amount"
+          [(ngModel)]="newRecord.price"
           readonly
         />
 
@@ -92,17 +92,17 @@
         <div class="record-row">
 
           <div class="left">
-            <span class="avatar">{{ record.client[0] }}</span>
+            <span class="avatar">{{ record.clientName[0] }}</span>
 
             <div>
-              <strong>{{ record.client }}</strong>
+              <strong>{{ record.clientName }}</strong>
               <p>{{ record.serviceName }}</p>
             </div>
           </div>
 
           <div class="right">
-            <strong>${{ record.amount }}</strong>
-            <span>{{ record.payment }}</span>
+            <strong>${{ record.price }}</strong>
+            <span>{{ record.paymentMethod }}</span>
           </div>
 
         </div>

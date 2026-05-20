@@ -4,17 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { CardComponent } from '../shared/card/card.component';
 import { DatabaseService } from '../../services/database.service';
 import { Service } from '../../models/service.model';
-
-interface RecordItem {
-  id: string;
-  client: string;
-  serviceId: string
-  serviceName: string
-  employee: string;
-  payment: string;
-  amount: number;
-  createdAt: Date;
-}
+import { RecordItem } from '../../models/record-item.model';
 
 @Component({
   selector: 'app-records',
@@ -35,25 +25,14 @@ export class RecordsComponent {
       this.getUsers();
     }
 
-  records: RecordItem[] = [
-    // {
-    //   id: '1',
-    //   client: 'Juan Pérez',
-    //   serviceId: '',
-    //   serviceName: 'Corte clásico',
-    //   employee: 'Marcos',
-    //   payment: 'Efectivo',
-    //   amount: 8000,
-    //   createdAt: new Date()
-    // }
-  ];
+  records: RecordItem[] = [];
 
   newRecord: Partial<RecordItem> = {
-    client: '',
+    clientName: '',
     serviceName: '',
-    employee: '',
-    payment: 'Efectivo',
-    amount: 0,
+    employeeName: '',
+    paymentMethod: 'Efectivo',
+    price: 0,
     serviceId: ''
   };
 
@@ -67,7 +46,7 @@ export class RecordsComponent {
   getRecords(){
       this.db.traerColeccion<RecordItem>('records').subscribe((response) => {
         this.records = response ;
-        console.log('Lista de atenciones:', this.services);
+        console.log('Lista de atenciones:', this.records);
       });
   }
 
@@ -84,15 +63,15 @@ export class RecordsComponent {
 
   async addRecord() {
 
-    if (!this.newRecord.client || !this.newRecord.serviceName) return;
+    if (!this.newRecord.clientName || !this.newRecord.serviceName) return;
 
     const record: RecordItem = {
       id: Date.now().toString(),
-      client: this.newRecord.client!,
+      clientName: this.newRecord.clientName!,
       serviceName: this.newRecord.serviceName!,
-      employee: this.newRecord.employee!,
-      payment: this.newRecord.payment!,
-      amount: Number(this.newRecord.amount),
+      employeeName: this.newRecord.employeeName!,
+      paymentMethod: this.newRecord.paymentMethod!,
+      price: Number(this.newRecord.price),
       createdAt: new Date(),
       serviceId: this.newRecord.serviceId!
     };
@@ -103,11 +82,11 @@ export class RecordsComponent {
     this.records.unshift(record);
 
     this.newRecord = {
-      client: '',
+      clientName: '',
       serviceName: '',
-      employee: '',
-      payment: 'Efectivo',
-      amount: 0,
+      employeeName: '',
+      paymentMethod: 'Efectivo',
+      price: 0,
       serviceId:''
     };
 
@@ -120,7 +99,7 @@ export class RecordsComponent {
     );
 
     if (selectedService) {
-      this.newRecord.amount = selectedService.price;
+      this.newRecord.price = selectedService.price;
       this.newRecord.serviceId = selectedService.id;
     }
   }
