@@ -85,14 +85,14 @@
 
   <div class="records-list">
 
-    @for (record of records; track record.id) {
+    @for (record of todayRecords; track record.id) {
 
       <app-card>
 
         <div class="record-row">
 
           <div class="left">
-            <span class="avatar">{{ record.clientName[0] }}</span>
+            <span class="avatar">{{ record.clientName?.[0] || '?'}}</span>
 
             <div>
               <strong>{{ record.clientName }}</strong>

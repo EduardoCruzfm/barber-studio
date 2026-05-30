@@ -16,7 +16,17 @@ import { RecordItem } from '../../models/record-item.model';
   styleUrl: './dashboard.component.css'
 })
 export class DashboardComponent implements OnInit {
-  stats!: DashboardStats;
+  // stats!: DashboardStats;
+   stats: DashboardStats = {
+    totalServices: 0,
+    totalRevenue: 0,
+    averagePerService: 0,
+    mostUsedPayment: PaymentMethod.EFECTIVO,
+    revenueByPayment: [],
+    revenueByService: [],
+    revenueByEmployee: []
+  };
+  
   todayRecords: ServiceRecord[] = [];
   records: RecordItem[] = [];
 
@@ -38,8 +48,12 @@ export class DashboardComponent implements OnInit {
   }
 
   loadData(): void {
-    this.todayRecords = this.serviceRecord.getTodayRecords();
-    this.stats = this.serviceRecord.getDashboardStats(this.todayRecords);
+    this.serviceRecord.getTodayRecords().subscribe(records => {
+    this.todayRecords = records;
+    this.stats = this.serviceRecord.getDashboardStats(records);
+    console.log('todayrecods',records);
+  });
+   
   }
 
   getRecords(){

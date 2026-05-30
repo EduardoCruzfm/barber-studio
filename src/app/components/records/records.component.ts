@@ -5,6 +5,8 @@ import { CardComponent } from '../shared/card/card.component';
 import { DatabaseService } from '../../services/database.service';
 import { Service } from '../../models/service.model';
 import { RecordItem } from '../../models/record-item.model';
+import { PaymentMethod, ServiceRecord } from '../../models';
+import { DashboardStats, ServiceRecordService } from '../../services/service-record.service';
 
 @Component({
   selector: 'app-records',
@@ -18,15 +20,26 @@ export class RecordsComponent {
   showForm = false;
   services: Service[] = [];
   employees: any ;
+
+  stats: DashboardStats = {
+      totalServices: 0,
+      totalRevenue: 0,
+      averagePerService: 0,
+      mostUsedPayment: PaymentMethod.EFECTIVO,
+      revenueByPayment: [],
+      revenueByService: [],
+      revenueByEmployee: []
+    };
   
-    constructor(private db: DatabaseService) {
+    constructor(private db: DatabaseService, private serviceRecord: ServiceRecordService) {
       this.getServices();
       this.getRecords();
       this.getUsers();
     }
 
   records: RecordItem[] = [];
-
+  todayRecords: ServiceRecord[] = [];
+  
   newRecord: Partial<RecordItem> = {
     clientName: '',
     serviceName: '',
@@ -35,6 +48,19 @@ export class RecordsComponent {
     price: 0,
     serviceId: ''
   };
+
+   ngOnInit(): void {
+    this.loadData();
+  }
+
+  loadData(): void {
+      this.serviceRecord.getTodayRecords().subscribe(records => {
+      this.todayRecords = records;
+      this.stats = this.serviceRecord.getDashboardStats(records);
+      console.log('todayrecods',records);
+    });
+
+  }
 
   getServices(){
       this.db.traerColeccion<Service>('services').subscribe((response) => {

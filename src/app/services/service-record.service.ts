@@ -1,18 +1,19 @@
 import { Injectable } from '@angular/core';
 import {
   ServiceRecord,
-  ServiceType,
+  
   PaymentMethod,
   UserModel
 } from '../models';
-import { MockDataService } from './mock-data.service';
+import { DatabaseService } from './database.service';
+import { Observable, map} from 'rxjs';
 
 export interface ServiceFilters {
   dateFrom?: Date;
   dateTo?: Date;
   employeeId?: string;
   paymentMethod?: PaymentMethod;
-  serviceType?: ServiceType;
+  serviceType?: string;
 }
 
 export interface DashboardStats {
@@ -21,7 +22,7 @@ export interface DashboardStats {
   averagePerService: number;
   mostUsedPayment: PaymentMethod;
   revenueByPayment: { method: PaymentMethod; total: number; count: number }[];
-  revenueByService: { type: ServiceType; total: number; count: number }[];
+  revenueByService: { type: string; total: number; count: number }[];
   revenueByEmployee: { employee: string; total: number; count: number }[];
 }
 
@@ -30,31 +31,15 @@ export interface DashboardStats {
 })
 export class ServiceRecordService {
 
-  constructor(private mockData: MockDataService) {}
+  constructor(private db: DatabaseService ) {}
 
   // ─── CRUD ─────────────────────────────────────────────────────
 
   /**
    * Obtiene todos los registros de servicio, ordenados por fecha desc.
    */
-  getAll(): ServiceRecord[] {
-    return this.mockData.getServiceRecords();
-  }
-
-  /**
-   * Agrega un nuevo registro de servicio.
-   * Genera un ID único y asigna el empleado actual.
-   */
-  addRecord(data: Omit<ServiceRecord, 'id' | 'employeeId' | 'employeeName'>): ServiceRecord {
-    const currentEmployee = this.mockData.getCurrentEmployee();
-    const record: ServiceRecord = {
-      ...data,
-      id: `srv-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`,
-      employeeId: currentEmployee.id,
-      employeeName: currentEmployee.name
-    };
-    this.mockData.addServiceRecord(record);
-    return record;
+  getAll(): Observable <ServiceRecord[]> {
+    return this.db.traerColeccion<ServiceRecord>('records');
   }
 
   // ─── Queries con Filtros ──────────────────────────────────────
@@ -62,39 +47,62 @@ export class ServiceRecordService {
   /**
    * Obtiene registros filtrados según los criterios proporcionados.
    */
-  getFiltered(filters: ServiceFilters): ServiceRecord[] {
-    let records = this.getAll();
+  getFiltered(filters: ServiceFilters): Observable<ServiceRecord[]> {
 
-    if (filters.dateFrom) {
-      const from = this.startOfDay(filters.dateFrom);
-      records = records.filter(r => r.date >= from);
-    }
+  return this.getAll().pipe(
 
-    if (filters.dateTo) {
-      const to = this.endOfDay(filters.dateTo);
-      records = records.filter(r => r.date <= to);
-    }
+    map(records => {
 
-    if (filters.employeeId) {
-      records = records.filter(r => r.employeeId === filters.employeeId);
-    }
+      let filtered = records;
 
-    if (filters.paymentMethod) {
-      records = records.filter(r => r.paymentMethod === filters.paymentMethod);
-    }
+      if (filters.dateFrom) {
+        const from = this.startOfDay(filters.dateFrom);
 
-    if (filters.serviceType) {
-      records = records.filter(r => r.serviceType === filters.serviceType);
-    }
+        filtered = filtered.filter(
+          (r: ServiceRecord) => r.createdAt.toDate() >= from
+        );
+      }
 
-    return records;
-  }
+      if (filters.dateTo) {
+        const to = this.endOfDay(filters.dateTo);
+
+        filtered = filtered.filter(
+          (r: ServiceRecord) => r.createdAt.toDate() <= to
+        );
+      }
+
+      if (filters.employeeId) {
+        filtered = filtered.filter(
+          (r: ServiceRecord) => r.employeeId === filters.employeeId
+        );
+      }
+
+      if (filters.paymentMethod) {
+        filtered = filtered.filter(
+          (r: ServiceRecord) => r.paymentMethod === filters.paymentMethod
+        );
+      }
+
+      if (filters.serviceType) {
+        filtered = filtered.filter(
+          (r: ServiceRecord) => r.serviceName === filters.serviceType
+        );
+      }
+
+      return filtered;
+
+    })
+
+  );
+
+}
 
   /**
    * Obtiene los registros de hoy.
    */
-  getTodayRecords(): ServiceRecord[] {
+  getTodayRecords(): Observable<ServiceRecord[]> {
     const today = new Date();
+
     return this.getFiltered({
       dateFrom: today,
       dateTo: today
@@ -104,7 +112,7 @@ export class ServiceRecordService {
   /**
    * Obtiene registros por fecha específica.
    */
-  getByDate(date: Date): ServiceRecord[] {
+  getByDate(date: Date): Observable<ServiceRecord[]> {
     return this.getFiltered({
       dateFrom: date,
       dateTo: date
@@ -114,14 +122,13 @@ export class ServiceRecordService {
   /**
    * Obtiene registros de un empleado específico.
    */
-  getByEmployee(employeeId: string): ServiceRecord[] {
+  getByEmployee(employeeId: string): Observable<ServiceRecord[]> {
     return this.getFiltered({ employeeId });
   }
-
   /**
    * Obtiene registros por método de pago.
    */
-  getByPaymentMethod(method: PaymentMethod): ServiceRecord[] {
+  getByPaymentMethod(method: PaymentMethod): Observable<ServiceRecord[]> {
     return this.getFiltered({ paymentMethod: method });
   }
 
@@ -131,7 +138,7 @@ export class ServiceRecordService {
    * Calcula todas las estadísticas del dashboard para un conjunto de registros.
    * Si no se pasan registros, usa los de hoy.
    */
-  getDashboardStats(records?: ServiceRecord[]): DashboardStats {
+  getDashboardStats(records: ServiceRecord[]): DashboardStats {
     const data = records ?? this.getTodayRecords();
 
     const totalServices = data.length;
@@ -163,22 +170,36 @@ export class ServiceRecordService {
       mostUsedPayment,
       revenueByPayment,
       revenueByService,
-      revenueByEmployee
+      revenueByEmployee,      
     };
+          // revenueByService,
+
   }
 
   /**
    * Obtiene el total recaudado hoy.
    */
-  getTodayTotal(): number {
-    return this.getTodayRecords().reduce((sum, r) => sum + r.price, 0);
+  getTodayTotal(): Observable<number> {
+    return this.getTodayRecords().pipe(
+      map((records: ServiceRecord[]) =>
+        records.reduce(
+          (sum: number, r: ServiceRecord) => sum + r.price,
+          0
+        )
+      )
+    );
   }
 
   /**
    * Resumen de recaudación del día por método de pago.
    */
-  getTodayByPayment(): { method: PaymentMethod; total: number; count: number }[] {
-    return this.groupByPayment(this.getTodayRecords());
+  getTodayByPayment(): Observable<
+  { method: PaymentMethod; total: number; count: number }[]> {
+    return this.getTodayRecords().pipe(
+      map((records: ServiceRecord[]) =>
+        this.groupByPayment(records)
+      )
+    );
   }
 
   // ─── Datos de Referencia ──────────────────────────────────────
@@ -186,37 +207,37 @@ export class ServiceRecordService {
   /**
    * Obtiene la lista de empleados activos.
    */
-  getActiveEmployees(): UserModel[] {
-    return this.mockData.getActiveEmployees();
-  }
+  // getActiveEmployees(): UserModel[] {
+  //   return this.mockData.getActiveEmployees();
+  // }
 
   /**
    * Obtiene todos los empleados.
    */
-  getAllEmployees(): UserModel[] {
-    return this.mockData.getEmployees();
-  }
+  // getAllEmployees(): UserModel[] {
+  //   return this.mockData.getEmployees();
+  // }
 
   /**
    * Obtiene el empleado actualmente logueado (simulado).
    */
-  getCurrentEmployee(): UserModel {
-    return this.mockData.getCurrentEmployee();
-  }
+  // getCurrentEmployee(): UserModel {
+  //   return this.mockData.getCurrentEmployee();
+  // }
 
   /**
    * Obtiene los precios sugeridos por tipo de servicio.
    */
-  getServicePrices(): Record<ServiceType, number> {
-    return this.mockData.getServicePrices();
-  }
+  // getServicePrices(): Record<ServiceType, number> {
+  //   return this.mockData.getServicePrices();
+  // }
 
   /**
    * Obtiene todos los tipos de servicio disponibles.
    */
-  getServiceTypes(): ServiceType[] {
-    return Object.values(ServiceType);
-  }
+  // getServiceTypes(): string[] {
+  //   return Object.values(ServiceType);
+  // }
 
   /**
    * Obtiene todos los métodos de pago disponibles.
@@ -242,14 +263,14 @@ export class ServiceRecordService {
       .sort((a, b) => b.total - a.total);
   }
 
-  private groupByServiceType(records: ServiceRecord[]): { type: ServiceType; total: number; count: number }[] {
-    const map = new Map<ServiceType, { total: number; count: number }>();
+  private groupByServiceType(records: ServiceRecord[]): { type: string; total: number; count: number }[] {
+    const map = new Map<string, { total: number; count: number }>();
 
     for (const record of records) {
-      const current = map.get(record.serviceType) ?? { total: 0, count: 0 };
+      const current = map.get(record.serviceName) ?? { total: 0, count: 0 };
       current.total += record.price;
       current.count += 1;
-      map.set(record.serviceType, current);
+      map.set(record.serviceName, current);
     }
 
     return Array.from(map.entries())

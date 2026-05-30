@@ -65,7 +65,7 @@
     
     <!-- Mobile: Cards -->
     <div class="service-cards mobile-only">
-      @for (record of records; track record.id) {
+      @for (record of todayRecords; track record.id) {
         <app-card>
           <div class="service-card-content">
             <div class="service-card-top">
@@ -98,7 +98,7 @@
       <app-card [noPadding]="true">
         <app-table
           [columns]="tableColumns"
-          [data]="records"
+          [data]="todayRecords"
           emptyMessage="No hay servicios registrados hoy">
         </app-table>
       </app-card>
