@@ -63,23 +63,23 @@ export class DatabaseService {
       .valueChanges();
   }
 
-  modificarUsuario(usuario: any, coleccion: string){
-    const collectionUsuarios = this.firestore.collection(coleccion);
-    const documento = collectionUsuarios.doc(usuario.id);
-    documento.update({... usuario});
+  modificarDocumento(doc: any, coleccion: string){
+    const collectionRef = this.firestore.collection(coleccion);
+    const documento = collectionRef.doc(doc.id);
+    documento.update({... doc});
   }
 
-  eliminar(usuario: any){
-    const collectionUsuarios = this.firestore.collection("usuarios");
-    const documento = collectionUsuarios.doc(usuario.id);
+  eliminarDocumento(doc: any, coleccion: string){
+    const collectionRef = this.firestore.collection(coleccion);
+    const documento = collectionRef.doc(doc.id);
     documento.delete();
   }
 
-  async obtenerUsuarioPorId(uid: string, coleccion: string): Promise<any> {
+  async obtenerDocumentoPorId(id: string, coleccion: string): Promise<any> {
     try {
-      const collectionUsuarios = this.firestore.collection(coleccion, ref => ref.where('id', '==', uid));
+      const collectionRef = this.firestore.collection(coleccion, ref => ref.where('id', '==', id));
       // Ejecuta la consulta
-      const querySnapshot = await collectionUsuarios.get().toPromise(); 
+      const querySnapshot = await collectionRef.get().toPromise(); 
       
       if (querySnapshot && !querySnapshot.empty) {
         // Obtengo el primer documento que coincide
@@ -98,19 +98,6 @@ export class DatabaseService {
       console.error('Error obteniendo el usuario:', error);
       return null;
     }
-  }
-
-  // Método para subir imagenes al Storage
-  async subirImagen(file: File): Promise<string> {
-    const storage = getStorage();
-    const storageRef = ref(storage, `imagenes/${file.name}`);
-
-    // Sube la imagen a Firebase Storage
-    await uploadBytes(storageRef, file);
-    
-    // Obtén la URL de descarga de la imagen subida
-    const url = await getDownloadURL(storageRef);
-    return url;
   }
   
 }
