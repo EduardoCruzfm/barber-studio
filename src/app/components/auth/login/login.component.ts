@@ -76,7 +76,7 @@ export class LoginComponent {
    async obtenerUsuario(perfil: string){
     const User =  this.authService.getCurrentUser();
     if (User) {
-      this.currentuser =  await this.db.obtenerUsuarioPorId(User.uid, perfil);
+      this.currentuser =  await this.db.obtenerDocumentoPorId(User.uid, perfil);
       if (this.currentuser) {
         this.user.setUsuario(this.currentuser);
         console.log("Usuario actual: ", this.currentuser);

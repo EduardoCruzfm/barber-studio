@@ -1,0 +1,82 @@
+.backdrop {
+  position: fixed;
+  inset: 0;
+
+  background: rgba(0,0,0,.6);
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  z-index: 1000;
+}
+
+.modal {
+  width: 100%;
+  max-width: 420px;
+
+  background: #1f1f23;
+
+  border: 1px solid rgba(255,255,255,.08);
+  border-radius: 18px;
+
+  overflow: hidden;
+
+  box-shadow:
+    0 20px 40px rgba(0,0,0,.35);
+}
+
+.modal-header {
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid rgba(255,255,255,.08);
+}
+
+.modal-header h3 {
+  margin: 0;
+  color: white;
+}
+
+.modal-body {
+  padding: 1.5rem;
+}
+
+.modal-body p {
+  margin: 0;
+  color: #b3b3b3;
+}
+
+.modal-actions {
+  display: flex;
+  gap: .75rem;
+  justify-content: flex-end;
+
+  padding: 1rem 1.5rem;
+}
+
+.btn {
+  border: none;
+  cursor: pointer;
+
+  padding: .8rem 1.2rem;
+  border-radius: 10px;
+
+  font-weight: 600;
+}
+
+.btn-secondary {
+  background: #2f3136;
+  color: white;
+}
+
+.btn-secondary:hover {
+  background: #3a3c42;
+}
+
+.btn-danger {
+  background: #ef4444;
+  color: white;
+}
+
+.btn-danger:hover {
+  background: #dc2626;
+}

@@ -40,7 +40,15 @@
       </div>
 
       <div class="form-actions">
-        <button (click)="addService()">Guardar</button>
+        @if (!editing) {
+          <button (click)="addService()">
+            Guardar
+          </button>
+        } @else {
+          <button (click)="openUpdateModal()">
+            Guardar cambios
+          </button>
+        }
         <button type="button" (click)="toggleForm()">Cancelar</button>
       </div>
 
@@ -72,8 +80,8 @@
           </div>
 
           <div class="actions">
-            <button class="edit">Editar</button>
-            <button class="delete" (click)="deleteService(service.id)">
+            <button class="edit" (click)="updateService(service)">Editar</button>
+            <button class="delete" (click)="deleteService(service)">
               Eliminar
             </button>
           </div>
@@ -86,3 +94,14 @@
   </div>
 
 </div>
+
+<app-modal
+  [visible]="showDeleteModal"
+  title={{this.title}}
+  message={{this.message}}
+  [confirmText]="modalAction === 'delete' ? 'Eliminar' : 'Guardar'"
+  confirmText="Eliminar"
+  cancelText="Cancelar"
+  (confirm)="confirmAction()"
+  (cancel)="cancelAction()">
+</app-modal>

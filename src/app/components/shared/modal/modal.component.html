@@ -1,0 +1,35 @@
+@if (visible) {
+
+<div class="backdrop">
+
+  <div class="modal">
+
+    <div class="modal-header">
+      <h3>{{ title }}</h3>
+    </div>
+
+    <div class="modal-body">
+      <p>{{ message }}</p>
+    </div>
+
+    <div class="modal-actions">
+
+      <button
+        class="btn btn-secondary"
+        (click)="cancel.emit()">
+        {{ cancelText }}
+      </button>
+
+      <button
+        class="btn btn-danger"
+        (click)="confirm.emit()">
+        {{ confirmText }}
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
+
+}
