@@ -4,6 +4,7 @@ export interface UserModel {
   active: boolean;
   id: string;
   name: string;
+  lastName: string;
   email: string;
   role: UserRole;
   approved: boolean;

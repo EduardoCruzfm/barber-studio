@@ -42,7 +42,8 @@ export class RegisterComponent {
 
               const userData: UserModel = {
                 id: userId,
-                name: name + ' ' + lastName,
+                name: name ,
+                lastName: lastName,
                 email: email,
                 role: role,
                 approved: false,
