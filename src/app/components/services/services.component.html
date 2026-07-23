@@ -16,28 +16,29 @@
   @if (showForm) {
 
     <app-card>
+      <form [formGroup]="form" (ngSubmit)="addService()">
+        <div class="form-grid">
 
-      <div class="form-grid">
+          <input
+            type="text"
+            placeholder="Nombre del servicio"
+            formControlName="name" 
+          />
 
-        <input
-          type="text"
-          placeholder="Nombre del servicio"
-          [(ngModel)]="newService.name"
-        />
+          <input
+            type="number"
+            placeholder="Precio"
+            formControlName="price" 
+          />
 
-        <input
-          type="number"
-          placeholder="Precio"
-          [(ngModel)]="newService.price"
-        />
+          <input
+            type="number"
+            placeholder="Duración (min)"
+            formControlName="duration" 
+          />
 
-        <input
-          type="number"
-          placeholder="Duración (min)"
-          [(ngModel)]="newService.duration"
-        />
-
-      </div>
+        </div>
+      </form>
 
       <div class="form-actions">
         @if (!editing) {

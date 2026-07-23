@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CardComponent } from '../shared/card/card.component';
 import { Service } from '../../models/service.model';
 import { DatabaseService } from '../../services/database.service';
@@ -9,7 +9,7 @@ import { ModalComponent } from '../shared/modal/modal.component';
 @Component({
   selector: 'app-services',
   standalone: true,
-  imports: [CommonModule, FormsModule, CardComponent, ModalComponent],
+  imports: [CommonModule, FormsModule, CardComponent, ReactiveFormsModule, ModalComponent],
   templateUrl: './services.component.html',
   styleUrl: './services.component.css'
 })
@@ -22,6 +22,13 @@ export class ServicesComponent {
   title?: string;
   modalAction: 'delete' | 'update' | null = null;
   editing = false;
+
+
+   form = new FormGroup({
+      name: new FormControl('', [Validators.required]),
+      price: new FormControl('', [Validators.required]),
+      duration: new FormControl('', [Validators.required]),
+    });
 
   constructor(private db: DatabaseService) {
     this.getServices();
@@ -42,33 +49,35 @@ export class ServicesComponent {
   }
 
   toggleForm() {
+    this.editing = false;
+    this.form.reset();
     this.showForm = !this.showForm;
   }
 
   async addService() {
 
-    if (!this.newService.name || !this.newService.price || !this.newService.duration) return;
+    if (this.form.valid) {
+      const { name,price,duration} = this.form.value;
+      if (typeof name === 'string' && typeof price === 'number' &&  typeof duration === 'number') {
 
-    const service: Service = {
-      id: Date.now().toString(),
-      name: this.newService.name,
-      price: Number(this.newService.price),
-      duration: Number(this.newService.duration),
-      active: true
-    };
+        const service: Service = {
+          id: Date.now().toString(),
+          name: name,
+          price: price,
+          duration: duration,
+          active: true
+        };
 
-    await this.db.agregarDocumento(service,'services');
-    console.log('Servicio', service) 
+        await this.db.agregarDocumento(service,'services');
+        console.log('Servicio', service) 
 
-    this.newService = {
-      name: '',
-      price: null as any,
-      duration: null as any,
-      active: true
-    };
-
-    this.showForm = false;
+        this.form.reset();
+        this.showForm = false;
+      }
+    }
   }
+
+  // al eliminar quedan los datos en el form si antes pusimos al editar
 
   deleteService(service: Service) {
     this.selectedService = service;
@@ -86,9 +95,9 @@ export class ServicesComponent {
     if (this.modalAction === 'update') {
       const service: Service = {
         ...this.selectedService,
-        name: this.newService.name!,
-        price: Number(this.newService.price),
-        duration: Number(this.newService.duration),
+        name: this.form.value.name!,
+        price: Number(this.form.value.price),
+        duration: Number(this.form.value.duration),
         active: true
       };
 
@@ -110,6 +119,7 @@ export class ServicesComponent {
 
     this.showDeleteModal = false;
     this.modalAction = null;
+    this.form.reset();
   }
 
   cancelAction() {
@@ -122,12 +132,11 @@ export class ServicesComponent {
 
     this.selectedService = service;
 
-    this.newService = {
+    this.form.setValue({
       name: service.name,
-      price: service.price,
-      duration: service.duration,
-      active: service.active
-    };
+      price: service.price.toString(),
+      duration: service.duration.toString(),
+    });
   }
 
     openUpdateModal() {

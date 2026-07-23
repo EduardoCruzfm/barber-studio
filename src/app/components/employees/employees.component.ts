@@ -11,7 +11,7 @@ import { ModalComponent } from '../shared/modal/modal.component';
 @Component({
   selector: 'app-employees',
   standalone: true,
-  imports: [CommonModule, FormsModule, CardComponent, ReactiveFormsModule,ModalComponent],
+  imports: [CommonModule, FormsModule, CardComponent, ReactiveFormsModule, ModalComponent],
   templateUrl: './employees.component.html',
   styleUrl: './employees.component.css'
 })
@@ -34,7 +34,6 @@ export class EmployeesComponent {
     name: new FormControl('', [Validators.required]),
     lastName: new FormControl('', [Validators.required]),
     email: new FormControl('', [Validators.required, Validators.email]),
-    // password: new FormControl('', [Validators.required]),
     role: new FormControl('', [Validators.required]),
   });
 
@@ -63,8 +62,6 @@ export class EmployeesComponent {
                 typeof role === 'string') {
                 
         try {
-          // const userCredential = await this.authService.register(email, password);
-          // const userId = userCredential.user?.uid;
           const role = this.form.value.role as UserRole;
 
           const userData: UserModel = {
