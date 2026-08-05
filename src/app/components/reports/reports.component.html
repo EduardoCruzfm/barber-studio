@@ -1,0 +1,153 @@
+<div class="reports">
+
+  <div class="page-header">
+
+    <div>
+      <h1>Reportes</h1>
+      <p class="subtitle">
+        Analiza la facturación y liquida el pago de los empleados.
+      </p>
+    </div>
+
+  </div>
+
+
+  <!-- RESUMEN -->
+
+  <section class="stats-grid">
+
+    <app-stat-card
+      title="Ingresos del mes"
+      [value]="report?.totalRevenue?.toString() ?? ''"
+      subtitle="Facturación total"
+      icon="payments"
+      variant="success">
+    </app-stat-card>
+
+    <app-stat-card
+      title="Servicios"
+      [value]="report?.totalServices?.toString() ?? '' "
+      subtitle="Servicios realizados"
+      icon="services"
+      variant="accent">
+    </app-stat-card>
+
+    <app-stat-card
+      title="Promedio"
+      [value]="report?.averagePerService?.toString() ?? ''"
+      subtitle="Por servicio"
+      icon="money"
+      variant="warning">
+    </app-stat-card>
+
+    <app-stat-card
+      title="Mejor empleado"
+      [value]="report?.topEmployee?.employee?.toString() ?? ''"
+      [subtitle]="report?.topEmployee?.total?.toString() ?? ''"
+      icon="users"
+      variant="accent">
+    </app-stat-card>
+
+  </section>
+
+
+  <!-- EMPLEADOS -->
+
+  <app-card>
+
+    <h2>Facturación por empleado</h2>
+
+    <div class="employee-list">
+
+      @for (employee of report?.revenueByEmployee; track employee.employeeId) {
+
+      <div class="employee-row" 
+      (click)="selectEmployee(employee)"
+      >
+
+        <div class="left">
+
+          <span class="avatar">
+            {{ employee.employee[0]}}
+          </span>
+
+          <div>
+
+            <strong>{{ employee.employee }}</strong>
+
+            <span class="role">
+               servicios  {{ employee.count }}
+            </span>
+
+          </div>
+
+        </div>
+
+        <strong class="amount">
+          {{ employee.total }}
+        </strong>
+
+      </div>
+      }
+
+    </div>
+
+  </app-card>
+
+
+  <!-- DETALLE -->
+
+  <app-card>
+
+    <div class="employee-header">
+
+      <div>
+
+        <h2>Eduardo Cruz</h2>
+
+        <p>Liquidación del día</p>
+
+      </div>
+
+    </div>
+
+
+    <div class="stats-grid">
+
+      <app-stat-card
+        title="Facturación"
+        [value]="selectedEmployee?.totalRevenue?.toString() ?? ''"
+        subtitle="Hoy"
+        icon="payments"
+        variant="success">
+      </app-stat-card>
+
+      <app-stat-card
+        title="Servicios"
+        [value]="selectedEmployee?.totalServices?.toString() ?? ''"
+        subtitle="Realizados"
+        icon="services"
+        variant="accent">
+      </app-stat-card>
+
+      <app-stat-card
+        title="Comisión"
+        [value]="selectedEmployee?.commission?.toString() ?? ''"
+        subtitle="Configurada"
+        icon="money"
+        variant="warning">
+      </app-stat-card>
+
+      <app-stat-card
+        title="Debe cobrar"
+        [value]="selectedEmployee?.totalToPay?.toString() ?? ''"
+        subtitle="Pago de hoy"
+        icon="payments"
+        variant="pink">
+      </app-stat-card>
+
+    </div>
+
+  </app-card>
+
+</div>

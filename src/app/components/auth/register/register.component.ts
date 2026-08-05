@@ -45,6 +45,7 @@ export class RegisterComponent {
                 name: name ,
                 lastName: lastName,
                 email: email,
+                commission: 50,
                 role: role,
                 approved: false,
                 createdAt: new Date(),

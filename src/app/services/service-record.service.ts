@@ -6,7 +6,7 @@ import {
   UserModel
 } from '../models';
 import { DatabaseService } from './database.service';
-import { Observable, map} from 'rxjs';
+import { Observable, map, combineLatest} from 'rxjs';
 
 export interface ServiceFilters {
   dateFrom?: Date;
@@ -24,6 +24,32 @@ export interface DashboardStats {
   revenueByPayment: { method: PaymentMethod; total: number; count: number }[];
   revenueByService: { type: string; total: number; count: number }[];
   revenueByEmployee: { employee: string; total: number; count: number }[];
+}
+
+export interface EmployeeSummary {
+  employeeId: string;
+  employee: string;
+  total: number;
+  count: number;
+}
+
+export interface MonthlyReport {
+  totalRevenue: number;
+  totalServices: number;
+  averagePerService: number;
+
+  topEmployee: EmployeeSummary;
+
+  revenueByEmployee: EmployeeSummary[];
+}
+
+export interface EmployeeSettlement {
+  employeeId: string;
+  employee: string;
+  totalRevenue: number;
+  totalServices: number;
+  commission: number;
+  totalToPay: number;
 }
 
 @Injectable({
@@ -172,7 +198,6 @@ export class ServiceRecordService {
       revenueByService,
       revenueByEmployee,      
     };
-          // revenueByService,
 
   }
 
@@ -202,49 +227,130 @@ export class ServiceRecordService {
     );
   }
 
-  // ─── Datos de Referencia ──────────────────────────────────────
-
-  /**
-   * Obtiene la lista de empleados activos.
-   */
-  // getActiveEmployees(): UserModel[] {
-  //   return this.mockData.getActiveEmployees();
-  // }
-
-  /**
-   * Obtiene todos los empleados.
-   */
-  // getAllEmployees(): UserModel[] {
-  //   return this.mockData.getEmployees();
-  // }
-
-  /**
-   * Obtiene el empleado actualmente logueado (simulado).
-   */
-  // getCurrentEmployee(): UserModel {
-  //   return this.mockData.getCurrentEmployee();
-  // }
-
-  /**
-   * Obtiene los precios sugeridos por tipo de servicio.
-   */
-  // getServicePrices(): Record<ServiceType, number> {
-  //   return this.mockData.getServicePrices();
-  // }
-
-  /**
-   * Obtiene todos los tipos de servicio disponibles.
-   */
-  // getServiceTypes(): string[] {
-  //   return Object.values(ServiceType);
-  // }
-
   /**
    * Obtiene todos los métodos de pago disponibles.
    */
   getPaymentMethods(): PaymentMethod[] {
     return Object.values(PaymentMethod);
   }
+
+  // ─── Reportes ──────────────────────────────────────
+
+
+  getCurrentMonthReport(): Observable<MonthlyReport> {
+
+  return this.getCurrentMonthRecords().pipe(
+
+    map((records: ServiceRecord[]) => {
+
+      const revenueByEmployee = this.groupByEmployee(records);
+
+      const totalRevenue = records.reduce(
+        (sum, record) => sum + record.price,
+        0
+      );
+
+      const totalServices = records.length;
+
+      const averagePerService =
+        totalServices > 0
+          ? Math.round(totalRevenue / totalServices)
+          : 0;
+
+      const topEmployee =
+        revenueByEmployee.length > 0
+          ? revenueByEmployee[0]
+          : {
+              employeeId: '',
+              employee: '',
+              total: 0,
+              count: 0
+            };
+
+      return {
+        totalRevenue,
+        totalServices,
+        averagePerService,
+        topEmployee,
+        revenueByEmployee
+      };
+
+    })
+
+  );
+}
+
+private calculateSettlement(
+  records: ServiceRecord[],
+  users: UserModel[]
+): EmployeeSettlement[] {
+
+  
+  const map = new Map<string, EmployeeSettlement>();
+
+  for (const record of records) {
+
+    const employeeData = users.find(
+      u => u.id === record.employeeId
+      );
+    
+    const commission = employeeData?.commission ?? 0;
+
+    const current = map.get(record.employeeId) ?? {
+      employeeId: record.employeeId,
+      employee: record.employeeName,
+      totalRevenue: 0,
+      totalServices: 0,
+      commission,
+      totalToPay: 0
+    };
+
+    current.totalRevenue += record.price;
+    current.totalServices++;
+
+    map.set(record.employeeId, current);
+  }
+
+  return Array.from(map.values()).map(employee => ({
+    ...employee,
+    totalToPay: employee.totalRevenue * (employee.commission / 100)
+  }));
+}
+
+ getEmployeesDailySettlement(): Observable<EmployeeSettlement[]> {
+
+  return combineLatest([
+    this.getTodayRecords(),
+    this.db.traerColeccion<UserModel>('users')
+  ]).pipe(
+
+    map(([records, users]) =>
+      this.calculateSettlement(records, users)
+    )
+
+  );
+
+}
+
+  // getEmployeesWeeklySettlement(commission: number): Observable<EmployeeSettlement[]> {
+  //   return this.getCurrentWeekRecords().pipe(
+  //     map(records => this.calculateSettlement(records, commission))
+  //   );
+  // }
+
+  getEmployeesMonthlySettlement(): Observable<EmployeeSettlement[]> {
+
+  return combineLatest([
+    this.getCurrentMonthRecords(),
+    this.db.traerColeccion<UserModel>('users')
+  ]).pipe(
+
+    map(([records, users]) =>
+      this.calculateSettlement(records, users)
+    )
+
+  );
+}
 
   // ─── Utilidades Privadas ──────────────────────────────────────
 
@@ -278,18 +384,29 @@ export class ServiceRecordService {
       .sort((a, b) => b.total - a.total);
   }
 
-  private groupByEmployee(records: ServiceRecord[]): { employee: string; total: number; count: number }[] {
-    const map = new Map<string, { total: number; count: number }>();
+    private groupByEmployee(
+    records: ServiceRecord[]
+  ): EmployeeSummary[] {
+
+    const map = new Map<string, EmployeeSummary>();
 
     for (const record of records) {
-      const current = map.get(record.employeeName) ?? { total: 0, count: 0 };
+
+      const current =
+        map.get(record.employeeId) ?? {
+          employeeId: record.employeeId,
+          employee: record.employeeName,
+          total: 0,
+          count: 0
+        };
+
       current.total += record.price;
-      current.count += 1;
-      map.set(record.employeeName, current);
+      current.count++;
+
+      map.set(record.employeeId, current);
     }
 
-    return Array.from(map.entries())
-      .map(([employee, data]) => ({ employee, ...data }))
+    return Array.from(map.values())
       .sort((a, b) => b.total - a.total);
   }
 
@@ -303,5 +420,32 @@ export class ServiceRecordService {
     const d = new Date(date);
     d.setHours(23, 59, 59, 999);
     return d;
+  }
+
+  
+  /**
+   * Obtiene registros del mes actual.
+   */
+  getCurrentMonthRecords(): Observable<ServiceRecord[]> {
+
+    const today = new Date();
+
+    const start = new Date(
+      today.getFullYear(),
+      today.getMonth(),
+      1
+    );
+
+    const end = new Date(
+      today.getFullYear(),
+      today.getMonth() + 1,
+      0
+    );
+
+    return this.getFiltered({
+      dateFrom: start,
+      dateTo: end
+    });
+
   }
 }

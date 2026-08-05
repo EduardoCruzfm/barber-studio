@@ -41,6 +41,7 @@ export class RecordsComponent {
   todayRecords: ServiceRecord[] = [];
   
   newRecord: Partial<RecordItem> = {
+    employeeId: '',
     clientName: '',
     serviceName: '',
     employeeName: '',
@@ -93,6 +94,7 @@ export class RecordsComponent {
 
     const record: RecordItem = {
       id: Date.now().toString(),
+      employeeId: this.newRecord.employeeId!, 
       clientName: this.newRecord.clientName!,
       serviceName: this.newRecord.serviceName!,
       employeeName: this.newRecord.employeeName!,
@@ -101,7 +103,7 @@ export class RecordsComponent {
       createdAt: new Date(),
       serviceId: this.newRecord.serviceId!
     };
-
+    // ver como guardar el id para hacer la likidacion de pagos del dia
     await this.db.agregarUsuario(record, 'records');
 
     console.log('atencion --->', record)
@@ -128,5 +130,17 @@ export class RecordsComponent {
       this.newRecord.price = selectedService.price;
       this.newRecord.serviceId = selectedService.id;
     }
+  }
+
+  onEmployeeChange() {
+
+    const employee = this.employees.find(
+      (e: any) => e.id === this.newRecord.employeeId
+    );
+
+    if (employee) {
+      this.newRecord.employeeName = employee.name;
+    }
+
   }
 }

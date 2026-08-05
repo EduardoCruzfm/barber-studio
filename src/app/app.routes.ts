@@ -53,6 +53,12 @@ export const routes: Routes = [
             .then(m => m.RecordsComponent)
       },
       {
+        path: 'reports',
+        loadComponent: () =>
+          import('./components/reports/reports.component')
+            .then(m => m.ReportsComponent)
+      },
+      {
         path: '',
         redirectTo: 'dashboard',
         pathMatch: 'full'

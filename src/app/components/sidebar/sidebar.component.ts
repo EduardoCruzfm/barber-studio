@@ -39,6 +39,11 @@ export class SidebarComponent {
       label: 'Empleados',
       route: '/employees',
       icon: 'users'
+    },
+    {
+      label: 'Reportes',
+      route: '/reports',
+      icon: 'reports'
     }
   ];
 

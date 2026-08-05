@@ -43,7 +43,9 @@
 
         </select>
 
-        <select [(ngModel)]="newRecord.employeeName">
+        <select
+          [(ngModel)]="newRecord.employeeId"
+          (change)="onEmployeeChange()">
           
 
           <option value="" disabled selected>
@@ -52,7 +54,7 @@
 
           @for (employee of employees; track employee.id) {
 
-            <option [value]="employee.name">
+            <option [value]="employee.id">
               {{ employee.name }}
             </option>
 

@@ -77,8 +77,6 @@ export class ServicesComponent {
     }
   }
 
-  // al eliminar quedan los datos en el form si antes pusimos al editar
-
   deleteService(service: Service) {
     this.selectedService = service;
 

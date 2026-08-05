@@ -6,6 +6,7 @@ export interface UserModel {
   name: string;
   lastName: string;
   email: string;
+  commission: number;
   role: UserRole;
   approved: boolean;
   specialty?: string;

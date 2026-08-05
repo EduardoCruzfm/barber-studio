@@ -91,6 +91,16 @@
   display: flex;
   gap: 10px;
   margin-bottom: 10px;
+  
+}
+
+
+.form-grid input , select{
+  padding: 1rem;
+  border-radius: 12px;
+  border: 1px solid #e5e7eb;
+  background: #0f172a;
+  color: white;
 }
 
 input, select {
@@ -101,6 +111,32 @@ input, select {
 }
 
 .form-actions {
+  margin-top: 1rem;
   display: flex;
   gap: 10px;
+}
+
+.form-actions button {
+  border: none;
+  border-radius: 10px;
+  padding: .8rem 1rem;
+  cursor: pointer;
+}
+
+input,
+select {
+  color: #686b6e; /* mismo gris que los inputs */
+  
+}
+
+select:invalid {
+  color: #9ca3af; /* gris del placeholder */
+}
+
+option {
+  color: #fff;
+}
+
+option[value=""] {
+  color: #9ca3af;
 }

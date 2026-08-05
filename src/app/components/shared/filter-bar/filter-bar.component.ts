@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, Output, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Employee, PaymentMethod, ServiceType } from '../../../models';
+import { PaymentMethod, UserModel } from '../../../models';
 import { ServiceFilters } from '../../../services/service-record.service';
 
 @Component({
@@ -12,7 +12,7 @@ import { ServiceFilters } from '../../../services/service-record.service';
   styleUrl: './filter-bar.component.css'
 })
 export class FilterBarComponent implements OnInit {
-  @Input() employees: Employee[] = [];
+  @Input() employees: UserModel[] = [];
   @Output() filtersChange = new EventEmitter<ServiceFilters>();
 
   dateFrom: string = '';

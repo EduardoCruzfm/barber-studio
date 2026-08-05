@@ -12,22 +12,24 @@
     </button>
   </div>
 
-  <!-- Form (simple por ahora) -->
+  <!-- Form -->
   @if (showForm) {
     <app-card>
       <form [formGroup]="form" (ngSubmit)="addEmployee($event)">
         <div class="form-grid">
           <input type="text" placeholder="Nombre" formControlName="name" name="name" required />
           <input type="text" placeholder="Apellido" formControlName="lastName" name="lastName" required />
+          <input type="number" placeholder="Comision" formControlName="commission" name="commission" required />
           <input type="email" placeholder="Email" formControlName="email" name="email" required />
+
           <select formControlName="role" name="role">
-            <option value="empleado">Empleado</option>
+             <option [ngValue]="null" disabled>Selecciona un rol</option>
+            <option value="employee">Empleado</option>
             <option value="admin">Admin</option>
           </select>
         </div>
 
         <div class="form-actions">
-          <!-- <button type="submit">Guardar</button> -->
           @if (!editing) {
             <button type="submit">Guardar</button>
           } @else {
@@ -52,7 +54,7 @@
 
             <div>
               <strong>{{ emp.name }}</strong>
-              <span class="role">{{ emp.role }}</span>
+              <span class="role">{{ getRoleLabel(emp.role) }}</span>
             </div>
           </div>
 

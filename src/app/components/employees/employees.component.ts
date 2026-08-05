@@ -34,6 +34,7 @@ export class EmployeesComponent {
     name: new FormControl('', [Validators.required]),
     lastName: new FormControl('', [Validators.required]),
     email: new FormControl('', [Validators.required, Validators.email]),
+    commission: new FormControl( 0, [Validators.required]),
     role: new FormControl('', [Validators.required]),
   });
 
@@ -57,9 +58,9 @@ export class EmployeesComponent {
     e.preventDefault();
 
     if (this.form.valid) {
-      const { name,lastName,email,role } = this.form.value;
+      const { name,lastName,commission,email,role } = this.form.value;
       if (typeof name === 'string' && typeof lastName === 'string' &&  typeof email === 'string' && 
-                typeof role === 'string') {
+          typeof commission === 'number' && typeof role === 'string') {
                 
         try {
           const role = this.form.value.role as UserRole;
@@ -69,6 +70,7 @@ export class EmployeesComponent {
             name: name ,
             lastName: lastName,
             email: email,
+            commission: commission,
             role: role,
             approved: false,
             createdAt: new Date(),
@@ -110,6 +112,7 @@ export class EmployeesComponent {
     this.form.patchValue({
       name: employee.name,
       lastName: employee.lastName,
+      commission: employee.commission,
       email: employee.email,
       role: employee.role
     });
@@ -157,5 +160,16 @@ export class EmployeesComponent {
   cancelAction() {
     this.showDeleteModal = false;
   }
+
+  getRoleLabel(role: string): string {
+  switch (role) {
+    case 'employee':
+      return 'Empleado';
+    case 'admin':
+      return 'Administrador';
+    default:
+      return role;
+  }
+}
 
 }
